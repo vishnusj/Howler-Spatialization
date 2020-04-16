@@ -7,6 +7,7 @@
   <title>Howler.js 3D Spatial Audio</title>
   <link rel="stylesheet" href="./styles.css">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.3/howler.js"></script>
+  <script src="http://reverbjs.org/reverb.js"></script>
 </head>
 
 <body>
@@ -19,8 +20,13 @@
     <button id="musicbtn" data-playing="false" role="switch" aria-checked="false">
       <span>Play Song</span>
     </button>
-    <input type="radio" name="ir" value="0" class="effect" >hall
-    <input type="radio" name="ir" value="1" class="effect">corridor
+
+    <button id="effectbtn" data-playing="false" role="switch" aria-checked="false">
+      <span>Play Song with Effect</span>
+    </button>
+    <input type="radio" name="ir" value="0" onclick="myFunction(this.value)" class="effect" checked="checked" > Elveden Hall - Marble Hall
+    <input type="radio" name="ir" value="1" onclick="myFunction(this.value)" class="effect"> Basement
+    <input type="radio" name="ir" value="2" onclick="myFunction(this.value)" class="effect"> R1 Nuclear Reactor Hall
     
   <!-- Game Canvas -->
   <canvas id="canvas" width="1" height="1">

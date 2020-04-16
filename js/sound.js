@@ -15,7 +15,7 @@
  */
 
 let usersound = new Howl({
-  src: ['./assets/test.mp3'],
+  src: ['./assets/test.m4a'],
 
 })
 
@@ -34,38 +34,42 @@ let forestsound = new Howl({
 
 let selectBtn = document.getElementById('selectbtn');
 let musicBtn = document.getElementById('musicbtn');
+let effectBtn = document.getElementById('effectbtn');
+
 let rainplay = true;
 let musicplay = false;
+let effectplay = true;
 document.getElementById("choose").style.color = "white";
 
 
 selectBtn.onclick = function () {
-  // console.log("Btn click "+rainplay)
+
   if (rainplay == true)
     rainplay = false;
   else
     rainplay = true;
 
-  //  console.log("Btn click after"+rainplay)
 }
 
 musicBtn.onclick = function () {
-  console.log("Btn click " + musicplay)
+
   if (musicplay == false) {
     musicplay = true;
     usersound.play();
     speaker2sound.play();
+
   }
-    
+
   else {
     musicplay = false;
-    usersound.pause();
     speaker2sound.pause();
-  }
-   
+    usersound.pause();
 
-  console.log("Btn click after" + musicplay)
+  }
+
+
 }
+
 
 
 document.addEventListener("click", printMousePos);
@@ -98,16 +102,9 @@ Sound.prototype = {
    */
   rain: function () {
     this._rain = this.sound.play('rain');
-    if (rainplay == true) {
 
-      //this.sound.volume(0.05, this._rain);
-      console.log("Volume 1")
-    }
+    this.sound.volume(0.01, this._rain);
 
-    else if (rainplay == false) {
-      this.sound.volume(0.0, this._rain);
-      console.log("Volume 0")
-    }
 
   },
 
@@ -184,8 +181,7 @@ Sound.prototype = {
 
     // Set the position of the speaker in 3D space.
     usersound.pos(x + 0.5, y + 0.5, -0.5);
-
-    usersound.volume(1.0);
+    usersound.volume(0.2);
 
     // Tweak the attributes to get the desired effect.
     usersound.pannerAttr({
@@ -195,7 +191,7 @@ Sound.prototype = {
       maxDistance: 10000,
       panningModel: 'HRTF',
       refDistance: 0.8,
-      rolloffFactor: 8.0,
+      rolloffFactor: 9.0,
       distanceModel: 'exponential'
     });
     if (musicplay == true)
@@ -211,14 +207,17 @@ Sound.prototype = {
     this.sound.once('play', function () {
       // Set the position of the speaker in 3D space.
       this.sound.pos(x + 0.5, y + 0.5, -0.5, soundId);
- 
-      this.sound.volume(0.1, soundId);
- 
+
+
+      this.sound.volume(0.5, soundId);
+
+
+
       // Tweak the attributes to get the desired effect.
       this.sound.pannerAttr({
         panningModel: 'HRTF',
         refDistance: 0.8,
-        rolloffFactor: 8.0,
+        rolloffFactor: 5.0,
         distanceModel: 'exponential'
       }, soundId);
     }.bind(this), soundId);
@@ -230,7 +229,7 @@ Sound.prototype = {
     // Set the position of the speaker in 3D space.
     speaker2sound.pos(x + 0.5, y + 0.5, -0.5);
 
-    speaker2sound.volume(1.0);
+    speaker2sound.volume(0.2);
 
     // Tweak the attributes to get the desired effect.
     speaker2sound.pannerAttr({
@@ -243,19 +242,16 @@ Sound.prototype = {
       rolloffFactor: 8.0,
       distanceModel: 'exponential'
     });
-    if (musicplay == true)
-    speaker2sound.play();
-    else
-    speaker2sound.pause();
+
 
   }
 
 };
 
-// Edits
+// Edits mouse click sound
 function printMousePos(event) {
 
-  console.log("X: " + event.clientX + " Y: " + event.clientY);
+
   forestsound.pos((event.clientX / 100), (event.clientY / 100), -0.5);
   forestsound.volume(1.0);
   forestsound.play();
@@ -263,31 +259,72 @@ function printMousePos(event) {
 
 }
 
+let selectedReverb = 0;
+function myFunction(valueSelected) {
+  selectedReverb = valueSelected;
+}
 
-// Room Effects added 
 
-function RoomEffectsSample(inputs, context) {
-  var ctx = this;
-  for (var i = 0; i < inputs.length; i++) {
-    inputs[i].addEventListener('change', function(e) {
-      var value = e.target.value;
-      ctx.setImpulseResponse(value);
+// Room effects added to the audio 
+
+// 1) Setup your audio context (once) and extend with Reverb.js.
+var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+reverbjs.extend(audioContext);
+
+
+
+var sourceNode = null;
+
+
+
+
+effectBtn.onclick = function () {
+
+  // 2) Load the impulse response; upon load, connect it to the audio output.
+  if (selectedReverb == 0) {
+
+    var reverbUrl = "http://reverbjs.org/Library/ElvedenHallMarbleHall.m4a";
+    var reverbNode = audioContext.createReverbFromUrl(reverbUrl, function () {
+      reverbNode.connect(audioContext.destination);
     });
   }
 
-  this.impulseResponses = [];
-  this.buffer = null;
-
-  // Load all of the needed impulse responses and the actual sample.
-  var loader = new BufferLoader(context, [
-    './assets/impulse response/hall.wav',
-    './assets/impulse response/corridor.wav'
-  ], onLoaded);
-
-  function onLoaded(buffers) {
-    ctx.buffer = buffers[0];
-    ctx.impulseResponses = buffers.splice(1);
-    ctx.impulseResponseBuffer = ctx.impulseResponses[0];
+  else if (selectedReverb == 1) {
+    var reverbUrl = "http://reverbjs.org/Library/Basement.m4a";
+    var reverbNode = audioContext.createReverbFromUrl(reverbUrl, function () {
+      reverbNode.connect(audioContext.destination);
+    });
   }
-  loader.load();
+
+  else if (selectedReverb == 2) {
+    var reverbUrl = "http://reverbjs.org/Library/R1NuclearReactorHall.m4a";
+    var reverbNode = audioContext.createReverbFromUrl(reverbUrl, function () {
+      reverbNode.connect(audioContext.destination);
+    });
+  }
+
+
+
+  // 3) Load a test sound; upon load, connect it to the reverb node.
+
+
+
+  if (effectplay == true) {
+
+    sourceNode = audioContext.createSourceFromUrl(speaker2sound._src, function () {
+      sourceNode.connect(reverbNode);
+    });
+    sourceNode.start();
+    effectplay = false
+  }
+  else {
+    sourceNode.disconnect();
+    sourceNode.stop(0);
+    sourceNode = null;
+    //console.log(sourceNode)
+    effectplay = true;
+  }
+
+
 }
+
