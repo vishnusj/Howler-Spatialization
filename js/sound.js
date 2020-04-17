@@ -181,7 +181,7 @@ Sound.prototype = {
 
     // Set the position of the speaker in 3D space.
     usersound.pos(x + 0.5, y + 0.5, -0.5);
-    usersound.volume(0.2);
+    usersound.volume(0.5);
 
     // Tweak the attributes to get the desired effect.
     usersound.pannerAttr({
@@ -191,7 +191,7 @@ Sound.prototype = {
       maxDistance: 10000,
       panningModel: 'HRTF',
       refDistance: 0.8,
-      rolloffFactor: 9.0,
+      rolloffFactor: 5.0,
       distanceModel: 'exponential'
     });
     if (musicplay == true)
@@ -229,7 +229,7 @@ Sound.prototype = {
     // Set the position of the speaker in 3D space.
     speaker2sound.pos(x + 0.5, y + 0.5, -0.5);
 
-    speaker2sound.volume(0.2);
+    speaker2sound.volume(0.5);
 
     // Tweak the attributes to get the desired effect.
     speaker2sound.pannerAttr({
@@ -239,11 +239,14 @@ Sound.prototype = {
       maxDistance: 10000,
       panningModel: 'HRTF',
       refDistance: 0.8,
-      rolloffFactor: 8.0,
+      rolloffFactor: 5.0,
       distanceModel: 'exponential'
     });
 
-
+    if (musicplay == true)
+    speaker2sound.play();
+  else
+  speaker2sound.pause();
   }
 
 };
