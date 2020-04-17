@@ -269,17 +269,12 @@ function myFunction(valueSelected) {
 
 
 // Room effects added to the audio 
+// Code Reference from Reverb.js to make room effects possible.
 
 // 1) Setup your audio context (once) and extend with Reverb.js.
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 reverbjs.extend(audioContext);
-
-
-
 var sourceNode = null;
-
-
-
 
 effectBtn.onclick = function () {
 
@@ -306,11 +301,7 @@ effectBtn.onclick = function () {
     });
   }
 
-
-
   // 3) Load a test sound; upon load, connect it to the reverb node.
-
-
 
   if (effectplay == true) {
 
@@ -324,7 +315,6 @@ effectBtn.onclick = function () {
     sourceNode.disconnect();
     sourceNode.stop(0);
     sourceNode = null;
-    //console.log(sourceNode)
     effectplay = true;
   }
 
