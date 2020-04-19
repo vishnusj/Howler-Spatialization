@@ -103,7 +103,7 @@ Sound.prototype = {
   rain: function () {
     this._rain = this.sound.play('rain');
 
-    this.sound.volume(0.01, this._rain);
+    this.sound.volume(0.0055, this._rain);
 
 
   },
